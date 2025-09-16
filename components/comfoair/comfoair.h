@@ -47,7 +47,7 @@ protected:
     
     enum class ResponseState {
         Head,
-        Code,
+        Command,
         DataLength,
         Data,
         DataSkipNext,
