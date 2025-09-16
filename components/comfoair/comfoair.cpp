@@ -73,6 +73,10 @@ void ComfoAirComponent::update() {
         ESP_LOGD(TAG, "Getting the fan status");
         write_command(CMD_GET_FAN_STATUS, nullptr, 0);
         break;
+    case 1:
+        ESP_LOGD(TAG, "Getting ventilation level data");
+        write_command(CMD_GET_VENTILATION_LEVEL, nullptr, 0);
+        break;
     }
 
     if (++update_counter >= update_counter_rollover)
@@ -107,7 +111,17 @@ void ComfoAirComponent::control(const climate::ClimateCall &call) {
 }
 
 void ComfoAirComponent::parse_response() {
-
+    switch (response_code) {
+    case RES_GET_VENTILATION_LEVEL:
+        ESP_LOGD("Exhaust air levels: %d%% %d%% %d%% %d%%", response_data[0], response_data[1], response_data[2], response_data[10]);
+        ESP_LOGD("Supply air levels: %d%% %d%% %d%% %d%%", response_data[3], response_data[4], response_data[5], response_data[11]);
+        ESP_LOGD("Current exh/sup: %d%% / %d%% (Level %d)", response_data[6], response_data[7], response_data[8]);
+        if (response_data[9])
+            ESP_LOGD("Supply fan is ACTIVE");
+        break;
+    default:
+        break;
+    }
 }
 
 void ComfoAirComponent::write_command(uint8_t command, uint8_t const* data, uint8_t data_length) {
