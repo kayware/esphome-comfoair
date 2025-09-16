@@ -57,6 +57,7 @@ void ComfoAirComponent::write_command(uint8_t command, uint8_t const* data, uint
 
     write_byte(COMMAND_PREFIX);
     write_byte(COMMAND_TAIL);
+    flush();
 }
 
 uint8_t ComfoAirComponent::calc_checksum(uint8_t const* buffer, uint8_t size, bool skip_double_seven) const {
