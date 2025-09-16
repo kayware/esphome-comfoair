@@ -1,10 +1,10 @@
 
 #include "comfoair.h"
 
-void ComfoAirComponent::loop()
+void ComfoAirComponent::loop() override
 {
 }
 
-void ComfoAirComponent::update()
+void ComfoAirComponent::update() override
 {
 }
