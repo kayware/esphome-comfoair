@@ -68,6 +68,15 @@ void ComfoAirComponent::loop() {
 }
 
 void ComfoAirComponent::update() {
+    switch (update_counter) {
+    case 0:
+        ESP_LOGD(TAG, "Getting the fan status");
+        write_command(CMD_GET_FAN_STATUS, nullptr, 0);
+        break;
+    }
+
+    if (++update_counter >= update_counter_rollover)
+        update_counter = 0;
 }
 
 climate::ClimateTraits ComfoAirComponent::traits() {

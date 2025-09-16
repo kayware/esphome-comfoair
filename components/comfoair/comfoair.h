@@ -8,7 +8,7 @@
 #include "esphome/components/climate/climate_mode.h"
 #include "esphome/components/climate/climate_traits.h"
 
-#define POLLING_FREQUENCY 1000
+#define POLLING_FREQUENCY 10000
 
 namespace esphome {
 namespace comfoair {
@@ -38,6 +38,9 @@ protected:
     void write_command(uint8_t command, uint8_t const* data, uint8_t data_length);
     uint8_t calc_checksum(uint8_t const* buffer, uint8_t size) const;
     void parse_response();
+
+    int8_t update_counter { 0 };
+    int8_t const update_counter_rollover { 1 };
 
     uint8_t response_data[64];
     uint8_t response_index { 0 };
