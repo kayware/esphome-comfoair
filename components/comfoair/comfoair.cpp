@@ -57,6 +57,8 @@ void ComfoAirComponent::loop() {
                 ESP_LOGV(TAG, "Got valid response from device. Command 0x%02x, 0x%02x data bytes.", response_code, response_data_length);
                 parse_response();
                 response_state = ResponseState::Head;
+            } else if (byte != COMMAND_PREFIX) {
+                ESP_LOGW(TAG, "Got junk after checksum validation in command 0x%02x: 0x%02x", response_code, byte);
             }
             break;
         }
