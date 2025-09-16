@@ -40,7 +40,7 @@ protected:
     void parse_response();
 
     int8_t update_counter { 0 };
-    int8_t const update_counter_rollover { 1 };
+    int8_t const update_counter_rollover { 2 };
 
     uint8_t response_data[64];
     uint8_t response_index { 0 };
