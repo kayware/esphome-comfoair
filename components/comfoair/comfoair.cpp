@@ -136,6 +136,15 @@ void ComfoAirComponent::parse_response() {
         if (response_data[9])
             ESP_LOGD(TAG, "Supply fan is ACTIVE");
         break;
+    case RES_GET_FAN_STATUS: {
+        int exhaust_rpm = 1875000 / ((int)((uint32_t)response_data[2] << 8 | (uint32_t)response_data[3]));
+        int supply_rpm = 1875000 / ((int)((uint32_t)response_data[4] << 8 | (uint32_t)response_data[5]));
+        ESP_LOGD(TAG, "Exhaust: %d%%", response_data[0]);
+        ESP_LOGD(TAG, "Supply: %d%%", response_data[1]);
+        ESP_LOGD(TAG, "RPM exh/sup: %d%% / %d%%", supply_rpm, exhaust_rpm);
+
+    }
+        break;
     default:
         break;
     }
