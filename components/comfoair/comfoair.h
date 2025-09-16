@@ -35,6 +35,9 @@ public:
 
 protected:
 
+    void write_command(uint8_t command, uint8_t const* data, uint8_t data_length);
+    uint8_t calc_checksum(uint8_t const* buffer, uint8_t size, bool skip_double_seven = true) const;
+
 };
 
 }
