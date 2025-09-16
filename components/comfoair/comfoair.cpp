@@ -113,11 +113,11 @@ void ComfoAirComponent::control(const climate::ClimateCall &call) {
 void ComfoAirComponent::parse_response() {
     switch (response_code) {
     case RES_GET_VENTILATION_LEVEL:
-        ESP_LOGD("Exhaust air levels: %d%% %d%% %d%% %d%%", response_data[0], response_data[1], response_data[2], response_data[10]);
-        ESP_LOGD("Supply air levels: %d%% %d%% %d%% %d%%", response_data[3], response_data[4], response_data[5], response_data[11]);
-        ESP_LOGD("Current exh/sup: %d%% / %d%% (Level %d)", response_data[6], response_data[7], response_data[8]);
+        ESP_LOGD(TAG, "Exhaust air levels: %d%% %d%% %d%% %d%%", response_data[0], response_data[1], response_data[2], response_data[10]);
+        ESP_LOGD(TAG, "Supply air levels: %d%% %d%% %d%% %d%%", response_data[3], response_data[4], response_data[5], response_data[11]);
+        ESP_LOGD(TAG, "Current exh/sup: %d%% / %d%% (Level %d)", response_data[6], response_data[7], response_data[8]);
         if (response_data[9])
-            ESP_LOGD("Supply fan is ACTIVE");
+            ESP_LOGD(TAG, "Supply fan is ACTIVE");
         break;
     default:
         break;
