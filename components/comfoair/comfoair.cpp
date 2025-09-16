@@ -43,7 +43,7 @@ void ComfoAirComponent::loop() {
             break;
         case ResponseState::Checksum:
         {
-            uint8_t expected = (response_code + response_data_length + calc_checksum(response_data, response_data_length, false)) & 0xff;
+            uint8_t expected = (response_code + response_data_length + calc_checksum(response_data, response_data_length)) & 0xff;
             if (byte == expected)
                 response_state = ResponseState::Tail;
             else {
@@ -114,27 +114,17 @@ void ComfoAirComponent::write_command(uint8_t command, uint8_t const* data, uint
         write_byte(data[i]);
     }
 
-    write_byte((command + data_length + calc_checksum(data, data_length, false)) & 0xff);
+    write_byte((command + data_length + calc_checksum(data, data_length)) & 0xff);
 
     write_byte(COMMAND_PREFIX);
     write_byte(COMMAND_TAIL);
     flush();
 }
 
-uint8_t ComfoAirComponent::calc_checksum(uint8_t const* buffer, uint8_t size, bool skip_double_seven) const {
-    uint8_t checksum = 173, x;
-    bool skip = false;
-    for (uint16_t i = 0; i < size; ++i) {
-        x = buffer[i];
-        if (skip_double_seven && (x == 0x07)) {
-            if (skip) {
-                skip = false;
-                continue;
-            }
-            skip = true;
-        }
-        checksum += x;
-    }
+uint8_t ComfoAirComponent::calc_checksum(uint8_t const* buffer, uint8_t size) const {
+    uint8_t checksum = 173;
+    for (uint16_t i = 0; i < size; ++i)
+        checksum += buffer[i];
     return checksum;
 }
 
