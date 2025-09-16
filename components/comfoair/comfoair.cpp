@@ -72,17 +72,13 @@ void ComfoAirComponent::update() {
     case -1:
     {
         const static uint8_t values[] = {
-            0x0f, 0x00, 0x0f,
-            0x00, 0xff, 0x80,
-            0x00, 0xff, 0x80,
-            0x00, 0xff, 0x80,
-            0x00, 0xff, 0x80,
-            0x00, 0xff, 0x80,
-            0x00
+            0, 30, 60,
+            0, 30, 60,
+            80, 80, 0
         };
 
-        ESP_LOGD(TAG, "Setting analog values");
-        write_command(CMD_SET_ANALOG_VALUES, values, sizeof(values));
+        ESP_LOGD(TAG, "Setting vent levels");
+        write_command(CMD_SET_VENTILATION_LEVEL, values, sizeof(values));
     }
     case 0:
         ESP_LOGD(TAG, "Getting the fan status");
