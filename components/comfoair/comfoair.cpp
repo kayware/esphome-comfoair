@@ -92,9 +92,15 @@ void ComfoAirComponent::update() {
         ESP_LOGD(TAG, "Getting ventilation level data");
         write_command(CMD_GET_VENTILATION_LEVEL, nullptr, 0);
         break;
+    case 2:
+    {
+        ESP_LOGD(TAG, "Setting ventillation level");
+        uint8_t lvl[1] = { 3 };
+        write_command(CMD_SET_VENTILATION_LEVEL, lvl, 1);
+    }
     }
 
-    if (++update_counter >= update_counter_rollover)
+    if (++update_counter >= 3)
         update_counter = 0;
 }
 
