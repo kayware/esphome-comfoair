@@ -6,6 +6,63 @@ namespace esphome {
 namespace comfoair {
 
 void ComfoAirComponent::loop() {
+    while (available() != 0) {
+        uint8_t byte;
+        read_byte(&byte);
+        
+        switch (response_state) {
+        case ResponseState::Head:
+            if (last_response_byte == COMMAND_PREFIX && byte == COMMAND_HEAD)
+                response_state = ResponseState::Command;
+            break;
+        case ResponseState::Command:
+            if (last_response_byte == 0x00) {
+                response_code = byte;
+                response_state = ResponseState::DataLength;
+            }
+            break;
+        case ResponseState::DataLength:
+            response_data_length = byte;
+            response_index = 0;
+            response_state = (response_data_length == 0) ? ResponseState::Checksum : ResponseState::Data;
+            break;
+        case ResponseState::Data:
+            response_data[response_index++] = byte;
+            if (response_index >= sizeof(response_data)) {
+                ESP_LOGW(TAG, "Device response exceeds size limit!");
+                response_state = ResponseState::Head;
+                break;
+            }
+            if (response_index == response_data_length)
+                response_state = ResponseState::Checksum;
+            if (byte == 0x07)
+                response_state = ResponseState::DataSkipNext;
+            break;
+        case ResponseState::DataSkipNext:
+            response_state = ResponseState::Data;
+            break;
+        case ResponseState::Checksum:
+        {
+            uint8_t expected = (response_code + response_data_length + calc_checksum(response_data, response_data_length, false)) & 0xff;
+            if (byte == expected)
+                response_state = ResponseState::Tail;
+            else {
+                ESP_LOGW(TAG, "Got invalid checksum in response: 0x%02x", byte);
+                response_state = ResponseState::Head;
+            }
+            break;
+        }
+        case ResponseState::Tail:
+            if (last_response_byte == COMMAND_PREFIX && byte == COMMAND_TAIL) {
+                ESP_LOGV(TAG, "Got valid response from device. Command 0x%02x, 0x%02x data bytes.", response_code, response_data_length);
+                parse_response();
+                response_state = ResponseState::Head;
+            }
+            break;
+        }
+
+        last_response_byte = byte;
+    }
 }
 
 void ComfoAirComponent::update() {
@@ -36,6 +93,10 @@ climate::ClimateTraits ComfoAirComponent::traits() {
 }
 
 void ComfoAirComponent::control(const climate::ClimateCall &call) {
+}
+
+void ComfoAirComponent::parse_response() {
+
 }
 
 void ComfoAirComponent::write_command(uint8_t command, uint8_t const* data, uint8_t data_length) {

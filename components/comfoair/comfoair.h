@@ -37,6 +37,23 @@ protected:
 
     void write_command(uint8_t command, uint8_t const* data, uint8_t data_length);
     uint8_t calc_checksum(uint8_t const* buffer, uint8_t size, bool skip_double_seven = true) const;
+    void parse_response();
+
+    uint8_t response_data[64];
+    uint8_t response_index { 0 };
+    uint8_t response_data_length { 0 };
+    uint8_t response_code { 0 };
+    uint8_t last_response_byte { 0 };
+    
+    enum class ResponseState {
+        Head,
+        Code,
+        DataLength,
+        Data,
+        DataSkipNext,
+        Checksum,
+        Tail,
+    } response_state = ResponseState::Head;
 
 };
 
