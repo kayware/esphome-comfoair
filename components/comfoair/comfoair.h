@@ -7,7 +7,6 @@
 #include "esphome/components/climate/climate.h"
 #include "esphome/components/climate/climate_mode.h"
 #include "esphome/components/climate/climate_traits.h"
-#include "esphome/components/sensor/sensor.h"
 
 #define POLLING_FREQUENCY 1000
 
