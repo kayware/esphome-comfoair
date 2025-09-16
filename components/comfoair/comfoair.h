@@ -39,7 +39,7 @@ protected:
     uint8_t calc_checksum(uint8_t const* buffer, uint8_t size) const;
     void parse_response();
 
-    int8_t update_counter { 0 };
+    int8_t update_counter { -1 };
     int8_t const update_counter_rollover { 2 };
 
     uint8_t response_data[64];
