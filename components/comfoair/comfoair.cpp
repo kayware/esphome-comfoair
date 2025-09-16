@@ -1,10 +1,16 @@
 
 #include "comfoair.h"
 
-void ComfoAirComponent::loop() override
+namespace esphome {
+namespace comfoair {
+
+void ComfoAirComponent::loop()
 {
 }
 
-void ComfoAirComponent::update() override
+void ComfoAirComponent::update()
 {
+}
+
+}
 }
