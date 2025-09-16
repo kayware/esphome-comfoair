@@ -27,7 +27,8 @@ public:
 
     void loop() override;
     void update() override;
-
+    climate::ClimateTraits traits() override;
+    void control(const climate::ClimateCall &call) override;
 
     float get_setup_priority() const override { return setup_priority::DATA; }
     void set_uart_component(uart::UARTComponent *parent) { set_uart_parent(parent); }
